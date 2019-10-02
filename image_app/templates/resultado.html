@@ -27,10 +27,14 @@
         <form method="POST" action="/ecopetrol/api/v1.0/" enctype="multipart/form-data">
             <h1>Elementos de protección personal</h1>
             <p class="lead"></p>
-            
+            {% if request.args.message %}
+				<div class="alert alert-danger" role="alert">
+				No se ha identificado un casco, verifica por favor que se este portando
+				</div>
+			{% endif %}
             <br>    
             <p>
-             <img  src="static/s.jpg"/>
+             <img  src="static/s.jpg" height="220px" width="450px"/>
             </p>
         </form>
 		<br>
