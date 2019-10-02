@@ -33,7 +33,10 @@ def get_hello():
 
 @app.route('/gallery')
 def get_gallery():
-    #return "<img src='static/s.jpg'/>"
+    #return "<img src='static/s.jpg'/>"  
+    if request.args:
+        print('acaa')
+        return render_template("resultado.html", message=json.dumps({"message":"alerta"}))
     return render_template("resultado.html")
 
 
@@ -48,10 +51,8 @@ def detection():
 
 @app.route('/ecopetrol/api/v1.0/', methods=['POST'])
 def detect_helment():
-    print('acaaa')
     if request.method == 'POST':
         endpoint = 'https://southcentralus.api.cognitive.microsoft.com/customvision/v3.0/Prediction/21be4d2c-fa3a-4c44-ba22-2360b047742c/detect/iterations/cascos/image'
-        print(request.files['file'])
         image = request.files['file'].read()
         nparr = np.fromstring(image, np.uint8)
         img_np = cv.imdecode(nparr, cv.IMREAD_COLOR)
@@ -66,7 +67,6 @@ def detect_helment():
         imgWidth = img_np.shape[1] 
         imgHeight = img_np.shape[0]    
         aux = 0
-        print(resp['predictions'])
         for prediction in resp['predictions']:
         
             probabilidad = float(prediction['probability'])*100
@@ -83,9 +83,11 @@ def detect_helment():
         
         if aux == 0:
              cv.imwrite('static/s.jpg',img_np)
+             mesg = json.dumps({"mensaje":"alerta"})
+             return redirect(url_for('get_gallery', message=mesg))
      
         #response = make_response(jsonify(resp, 200))
-        return redirect(url_for('get_gallery'))
+        return redirect(url_for('get_gallery'   ))
     else:
         response = make_response(
                 jsonify({'error': 'Imagen no encontrada'}), 
